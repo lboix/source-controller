@@ -664,6 +664,16 @@ func (r *OCIRepositoryReconciler) verifySignature(ctx context.Context, obj *ociv
 
 		// if no secret is provided, try keyless verification
 		ctrl.LoggerFrom(ctx).Info("no secret reference is provided, trying to verify the image using keyless method")
+
+		if obj.Spec.Verify.CosignIdentityMatch != nil {
+			if obj.Spec.Verify.CosignIdentityMatch.IssuerRegExp != "" {
+				defaultCosignOciOpts = append(defaultCosignOciOpts, soci.WithIssuerRegexp(obj.Spec.Verify.CosignIdentityMatch.IssuerRegExp))
+			}
+
+			if obj.Spec.Verify.CosignIdentityMatch.SubjectRegExp != "" {
+				defaultCosignOciOpts = append(defaultCosignOciOpts, soci.WithSubjectRegexp(obj.Spec.Verify.CosignIdentityMatch.SubjectRegExp))
+			}
+		}
 		verifier, err := soci.NewCosignVerifier(ctxTimeout, defaultCosignOciOpts...)
 		if err != nil {
 			return err

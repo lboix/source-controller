@@ -1614,6 +1614,56 @@ github.com/fluxcd/pkg/apis/meta.ReconcileRequestStatus
 </table>
 </div>
 </div>
+<h3 id="source.toolkit.fluxcd.io/v1beta2.CosignIdentityMatch">CosignIdentityMatch
+</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#source.toolkit.fluxcd.io/v1beta2.OCIRepositoryVerification">OCIRepositoryVerification</a>)
+</p>
+<p>CosignIdentityMatch specifies options for verifying the certificate identity,
+i.e. the issuer and the subject of the certificate.</p>
+<div class="md-typeset__scrollwrap">
+<div class="md-typeset__table">
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>issuerRegExp</code><br>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>IssuerRegExp specifies the regex pattern to match against to verify
+the OIDC issuer in the Fulcio certificate. The pattern must be a
+valid Go regular expression.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>subjectRegExp</code><br>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>SubjectRegExp specifies the regex pattern to match against to verify
+the identity in the Fulcio certificate. The pattern must be a
+valid Go regular expression.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <h3 id="source.toolkit.fluxcd.io/v1beta2.GitRepositoryInclude">GitRepositoryInclude
 </h3>
 <p>
@@ -3293,6 +3343,21 @@ github.com/fluxcd/pkg/apis/meta.LocalObjectReference
 <em>(Optional)</em>
 <p>SecretRef specifies the Kubernetes Secret containing the
 trusted public keys.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>cosignIdentityMatch</code><br>
+<em>
+<a href="#source.toolkit.fluxcd.io/v1beta2.CosignIdentityMatch">
+CosignIdentityMatch
+</a>
+</em>
+</td>
+<td>
+<p>CosignIdentityMatch specifies the identity matching criteria to use
+while verifying an OCI artifact which was signed using Cosign keyless
+signing.</p>
 </td>
 </tr>
 </tbody>

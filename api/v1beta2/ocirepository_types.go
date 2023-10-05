@@ -190,6 +190,26 @@ type OCIRepositoryVerification struct {
 	// trusted public keys.
 	// +optional
 	SecretRef *meta.LocalObjectReference `json:"secretRef,omitempty"`
+
+	// CosignIdentityMatch specifies the identity matching criteria to use
+	// while verifying an OCI artifact which was signed using Cosign keyless
+	// signing.
+	CosignIdentityMatch *CosignIdentityMatch `json:"cosignIdentityMatch,omitempty"`
+}
+
+// CosignIdentityMatch specifies options for verifying the certificate identity,
+// i.e. the issuer and the subject of the certificate.
+type CosignIdentityMatch struct {
+	// IssuerRegExp specifies the regex pattern to match against to verify
+	// the OIDC issuer in the Fulcio certificate. The pattern must be a
+	// valid Go regular expression.
+	// +optional
+	IssuerRegExp string `json:"issuerRegExp,omitempty"`
+	// SubjectRegExp specifies the regex pattern to match against to verify
+	// the identity in the Fulcio certificate. The pattern must be a
+	// valid Go regular expression.
+	// +optional
+	SubjectRegExp string `json:"subjectRegExp,omitempty"`
 }
 
 // OCIRepositoryStatus defines the observed state of OCIRepository

@@ -1338,6 +1338,15 @@ func (r *HelmChartReconciler) makeVerifiers(ctx context.Context, obj *helmv1.Hel
 		}
 
 		// if no secret is provided, add a keyless verifier
+		if obj.Spec.Verify.CosignIdentityMatch != nil {
+			if obj.Spec.Verify.CosignIdentityMatch.IssuerRegExp != "" {
+				defaultCosignOciOpts = append(defaultCosignOciOpts, soci.WithIssuerRegexp(obj.Spec.Verify.CosignIdentityMatch.IssuerRegExp))
+			}
+
+			if obj.Spec.Verify.CosignIdentityMatch.SubjectRegExp != "" {
+				defaultCosignOciOpts = append(defaultCosignOciOpts, soci.WithSubjectRegexp(obj.Spec.Verify.CosignIdentityMatch.SubjectRegExp))
+			}
+		}
 		verifier, err := soci.NewCosignVerifier(ctx, defaultCosignOciOpts...)
 		if err != nil {
 			return nil, err

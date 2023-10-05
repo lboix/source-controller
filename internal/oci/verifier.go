@@ -40,8 +40,10 @@ type Verifier interface {
 
 // options is a struct that holds options for verifier.
 type options struct {
-	PublicKey []byte
-	ROpt      []remote.Option
+	PublicKey     []byte
+	ROpt          []remote.Option
+	IssuerRegExp  string
+	SubjectRegExp string
 }
 
 // Options is a function that configures the options applied to a Verifier.
@@ -59,6 +61,18 @@ func WithPublicKey(publicKey []byte) Options {
 func WithRemoteOptions(opts ...remote.Option) Options {
 	return func(o *options) {
 		o.ROpt = opts
+	}
+}
+
+func WithSubjectRegexp(subjectRegExp string) Options {
+	return func(opts *options) {
+		opts.SubjectRegExp = subjectRegExp
+	}
+}
+
+func WithIssuerRegexp(issuerRegExp string) Options {
+	return func(opts *options) {
+		opts.IssuerRegExp = issuerRegExp
 	}
 }
 
@@ -81,6 +95,18 @@ func NewCosignVerifier(ctx context.Context, opts ...Options) (*CosignVerifier, e
 	if err != nil {
 		return nil, err
 	}
+
+	identity := cosign.Identity{
+		IssuerRegExp:  ".*",
+		SubjectRegExp: ".*",
+	}
+	if o.IssuerRegExp != "" {
+		identity.IssuerRegExp = o.IssuerRegExp
+	}
+	if o.SubjectRegExp != "" {
+		identity.SubjectRegExp = o.SubjectRegExp
+	}
+	checkOpts.Identities = []cosign.Identity{identity}
 
 	if o.ROpt != nil {
 		co = append(co, ociremote.WithRemoteOptions(o.ROpt...))
@@ -141,17 +167,7 @@ func NewCosignVerifier(ctx context.Context, opts ...Options) (*CosignVerifier, e
 
 // VerifyImageSignatures verify the authenticity of the given ref OCI image.
 func (v *CosignVerifier) VerifyImageSignatures(ctx context.Context, ref name.Reference) ([]oci.Signature, bool, error) {
-	opts := v.opts
-
-	// TODO: expose the match conditions in the CRD
-	opts.Identities = []cosign.Identity{
-		{
-			IssuerRegExp:  ".*",
-			SubjectRegExp: ".*",
-		},
-	}
-
-	return cosign.VerifyImageSignatures(ctx, ref, opts)
+	return cosign.VerifyImageSignatures(ctx, ref, v.opts)
 }
 
 // Verify verifies the authenticity of the given ref OCI image.
