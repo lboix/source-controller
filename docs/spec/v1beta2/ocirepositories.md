@@ -506,6 +506,8 @@ signatures. The field offers two subfields:
 - `.provider`, to specify the verification provider. Only supports `cosign` at present.
 - `.secretRef.name`, to specify a reference to a Secret in the same namespace as
   the OCIRepository, containing the Cosign public keys of trusted authors.
+- `.cosignIdentityMatch`, to specify the identity matching criteria if the
+   artifact was signed using Cosign keyless signing.
 
 ```yaml
 ---
@@ -555,6 +557,14 @@ For publicly available OCI artifacts, which are signed using the
 [Cosign Keyless](https://github.com/sigstore/cosign/blob/main/KEYLESS.md) procedure,
 you can enable the verification by omitting the `.verify.secretRef` field.
 
+To verify that the subject and the OIDC issuer present in the Fulcio certificate
+you can specify `.spec.verify.cosignIdentityMatch`. It provides two fields:
+
+- `.issuerRegExp`, to sepcify a regexp that matches against the OIDC issuer.
+- `.subjectRegExp`, to specify a regexp that matches against the identity in
+   the certificate.
+Both values should follow the [Go regular expression syntax](https://golang.org/s/re2syntax).
+
 Example of verifying artifacts signed by the
 [Cosign GitHub Action](https://github.com/sigstore/cosign-installer) with GitHub OIDC Token:
 
@@ -568,6 +578,9 @@ spec:
   url: oci://ghcr.io/stefanprodan/manifests/podinfo
   verify:
     provider: cosign
+    cosignIdentityMatch:
+      subjectRegExp: "stefanprodan"
+      issuerRegExp: "^https://token.actions.githubusercontent.com$"
 ```
 
 The controller verifies the signatures using the Fulcio root CA and the Rekor
