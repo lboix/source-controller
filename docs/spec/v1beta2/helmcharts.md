@@ -308,10 +308,10 @@ For publicly available HelmCharts, which are signed using the
 you can enable the verification by omitting the `.verify.secretRef` field.
 
 To verify that the subject and the OIDC issuer present in the Fulcio certificate
-you can specify `.spec.verify.cosignIdentityMatch`. It provides two fields:
+you can specify `.spec.verify.matchOIDCIdentity`. It provides two fields:
 
-- `.issuerRegExp`, to sepcify a regexp that matches against the OIDC issuer.
-- `.subjectRegExp`, to specify a regexp that matches against the identity in
+- `.issuer`, to sepcify a regexp that matches against the OIDC issuer.
+- `.subject`, to specify a regexp that matches against the identity in
    the certificate.
 Both values should follow the [Go regular expression syntax](https://golang.org/s/re2syntax).
 
@@ -333,9 +333,9 @@ spec:
   version: ">=6.1.6"
   verify:
     provider: cosign
-    cosignIdentityMatch:
-      subjectRegExp: "stefanprodan"
-      issuerRegExp: "^https://token.actions.githubusercontent.com$"
+    matchOIDCIdentity:
+      subject: "^https://github.com/stefanprodan/podinfo.*$"
+      issuer: "^https://token.actions.githubusercontent.com$"
 ```
 
 ```yaml

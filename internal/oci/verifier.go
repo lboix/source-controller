@@ -64,15 +64,15 @@ func WithRemoteOptions(opts ...remote.Option) Options {
 	}
 }
 
-func WithSubjectRegexp(subjectRegExp string) Options {
+func WithSubjectRegexp(subject string) Options {
 	return func(opts *options) {
-		opts.SubjectRegExp = subjectRegExp
+		opts.SubjectRegExp = subject
 	}
 }
 
-func WithIssuerRegexp(issuerRegExp string) Options {
+func WithIssuerRegexp(issuer string) Options {
 	return func(opts *options) {
-		opts.IssuerRegExp = issuerRegExp
+		opts.IssuerRegExp = issuer
 	}
 }
 

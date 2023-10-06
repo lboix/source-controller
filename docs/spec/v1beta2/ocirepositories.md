@@ -506,7 +506,7 @@ signatures. The field offers two subfields:
 - `.provider`, to specify the verification provider. Only supports `cosign` at present.
 - `.secretRef.name`, to specify a reference to a Secret in the same namespace as
   the OCIRepository, containing the Cosign public keys of trusted authors.
-- `.cosignIdentityMatch`, to specify the identity matching criteria if the
+- `.matchOIDCIdentity`, to specify the identity matching criteria if the
    artifact was signed using Cosign keyless signing.
 
 ```yaml
@@ -558,10 +558,10 @@ For publicly available OCI artifacts, which are signed using the
 you can enable the verification by omitting the `.verify.secretRef` field.
 
 To verify that the subject and the OIDC issuer present in the Fulcio certificate
-you can specify `.spec.verify.cosignIdentityMatch`. It provides two fields:
+you can specify `.spec.verify.matchOIDCIdentity`. It provides two fields:
 
-- `.issuerRegExp`, to sepcify a regexp that matches against the OIDC issuer.
-- `.subjectRegExp`, to specify a regexp that matches against the identity in
+- `.issuer`, to sepcify a regexp that matches against the OIDC issuer.
+- `.subject`, to specify a regexp that matches against the identity in
    the certificate.
 Both values should follow the [Go regular expression syntax](https://golang.org/s/re2syntax).
 
@@ -578,9 +578,9 @@ spec:
   url: oci://ghcr.io/stefanprodan/manifests/podinfo
   verify:
     provider: cosign
-    cosignIdentityMatch:
-      subjectRegExp: "stefanprodan"
-      issuerRegExp: "^https://token.actions.githubusercontent.com$"
+    matchOIDCIdentity:
+      subject: "^https://github.com/stefanprodan/podinfo.*$"
+      issuer: "^https://token.actions.githubusercontent.com$"
 ```
 
 The controller verifies the signatures using the Fulcio root CA and the Rekor

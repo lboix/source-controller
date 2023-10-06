@@ -411,19 +411,19 @@ spec:
                   Chart dependencies, which are not bundled in the umbrella chart
                   artifact, are not verified.
                 properties:
-                  cosignIdentityMatch:
-                    description: CosignIdentityMatch specifies the identity matching
+                  matchOIDCIdentity:
+                    description: MatchOIDCIdentity specifies the identity matching
                       criteria to use while verifying an OCI artifact which was signed
                       using Cosign keyless signing.
                     properties:
-                      issuerRegExp:
-                        description: IssuerRegExp specifies the regex pattern to match
-                          against to verify the OIDC issuer in the Fulcio certificate.
-                          The pattern must be a valid Go regular expression.
+                      issuer:
+                        description: Issuer specifies the regex pattern to match against
+                          to verify the OIDC issuer in the Fulcio certificate. The
+                          pattern must be a valid Go regular expression.
                         type: string
-                      subjectRegExp:
-                        description: SubjectRegExp specifies the regex pattern to
-                          match against to verify the identity in the Fulcio certificate.
+                      subject:
+                        description: Subject specifies the regex pattern to match
+                          against to verify the identity in the Fulcio certificate.
                           The pattern must be a valid Go regular expression.
                         type: string
                     type: object
